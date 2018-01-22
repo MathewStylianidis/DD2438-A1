@@ -1,0 +1,67 @@
+/MANIFEST:NO
+/NOLOGO
+/DEBUG
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/FIXED:No
+/NXCOMPAT
+/STACK:5000000
+/DELAY:UNLOAD
+/DLL
+/PDBALTPATH:%_PDB%
+/OPT:NOREF
+/OPT:NOICF
+/INCREMENTAL:NO
+/ignore:4199
+/ignore:4099
+/DELAYLOAD:"d3d12.dll"
+/NODEFAULTLIB:"LIBCMT"
+/NODEFAULTLIB:"LIBCPMT"
+/NODEFAULTLIB:"LIBCMTD"
+/NODEFAULTLIB:"LIBCPMTD"
+/NODEFAULTLIB:"MSVCRTD"
+/NODEFAULTLIB:"MSVCPRTD"
+/NODEFAULTLIB:"LIBC"
+/NODEFAULTLIB:"LIBCP"
+/NODEFAULTLIB:"LIBCD"
+/NODEFAULTLIB:"LIBCPD"
+"D:\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\SharedPCH.Engine.h.obj"
+"D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Intermediate\Build\Win64\UE4Editor\Development\A1\A1.cpp.obj"
+"D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Intermediate\Build\Win64\UE4Editor\Development\A1\A1GameModeBase.cpp.obj"
+"D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Intermediate\Build\Win64\UE4Editor\Development\A1\A1.init.gen.cpp.obj"
+"D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Intermediate\Build\Win64\UE4Editor\Development\A1\A1GameModeBase.gen.cpp.obj"
+"D:\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\A1\PCLaunch.rc.res"
+"D:\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\ModuleVersionResource.rc.inl.res"
+"delayimp.lib"
+"wininet.lib"
+"rpcrt4.lib"
+"ws2_32.lib"
+"dbghelp.lib"
+"comctl32.lib"
+"Winmm.lib"
+"kernel32.lib"
+"user32.lib"
+"gdi32.lib"
+"winspool.lib"
+"comdlg32.lib"
+"advapi32.lib"
+"shell32.lib"
+"ole32.lib"
+"oleaut32.lib"
+"uuid.lib"
+"odbc32.lib"
+"odbccp32.lib"
+"netapi32.lib"
+"iphlpapi.lib"
+"setupapi.lib"
+"dwmapi.lib"
+"imm32.lib"
+"D:\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-Core.lib"
+"D:\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-CoreUObject.lib"
+"D:\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-Engine.lib"
+"D:\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-InputCore.lib"
+/OUT:"D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Binaries\Win64\UE4Editor-A1.dll"
+/IMPLIB:"D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-A1.suppressed.lib"
+/PDB:"D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Binaries\Win64\UE4Editor-A1.pdb"
+/ignore:4078
