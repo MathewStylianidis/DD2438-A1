@@ -1,3 +1,0 @@
-D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Source\A1\A1.Build.cs
-D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Source\A1.Target.cs
-D:\My myself and I\Sweden 2017-2018\KTH\AI and MA systems\DD2438-A1\A1\Source\A1Editor.Target.cs
