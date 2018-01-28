@@ -2,25 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class Node
+{
+	public Node parent;
+	public pointInfo info;
+	private List<Node> children;
+
+	public Node(Node parent, pointInfo info)
+	{
+		this.parent = parent;
+		this.info = info;
+		this.children = new List<Node>();
+	}
+
+	public Node getChild(int idx) { return children[idx];}
+	public void appendChild(Node child) { children.Add(child);}
+
+}
+
+
 public class RRT : MonoBehaviour {
-
-    class Node
-    {
-        public Node parent;
-        public pointInfo info;
-        private List<Node> children;
-
-        public Node(Node parent, pointInfo info)
-        {
-            this.parent = parent;
-            this.info = info;
-            this.children = new List<Node>();
-        }
-
-        public Node getChild(int idx) { return children[idx];}
-        public void appendChild(Node child) { children.Add(child);}
-
-    }
 
     public Vector3 posGoal;
     public Vector3 posStart;
@@ -39,6 +40,7 @@ public class RRT : MonoBehaviour {
     private float xmin, xmax;
     private float ymin, ymax;
     private Stack<pointInfo> path;
+	private List<Node> G;
   
 
     // Use this for initialization
@@ -52,7 +54,11 @@ public class RRT : MonoBehaviour {
 		
 	}
 
-    void calculateSpace()
+
+	public Stack<pointInfo> getPath(){ return path;}
+	public List<Node> getTreeList(){ return G;}
+
+    private void calculateSpace()
     {
         for (int i = 0; i < obstacles.Count; i++)
         {
@@ -98,14 +104,17 @@ public class RRT : MonoBehaviour {
     private void buildRRT(int minNodes, int maxNodes)
     {
         Node root = new Node(null, new pointInfo(posStart, velStart));
-        List<Node> G = new List<Node>();
+        G = new List<Node>();
         G.Add(root);
         
         for(int k = 0; k < maxNodes; k++)
         {
-            
-            Vector3 qRand = new Vector3(Random.Range(xmin, xmax), heightPoint, Random.Range(ymin, ymax));
-            Node qNear = getNearestVertex(G, qRand);
+			Vector3 qRand = new Vector3(Random.Range(xmin, xmax), heightPoint, Random.Range(ymin, ymax));
+			Node qNear;
+			if (k % 10 != 0)
+				qNear = getNearestVertex (G, qRand);
+			else
+				qNear = getNearestVertex (G, posGoal);
             Node qNew = new Node(qNear, motionModel.moveTowards(qNear.info, qRand));
             G.Add(qNew);
             if(Vector3.Distance(qNew.info.pos, posGoal) < vMax * dt)
@@ -119,6 +128,7 @@ public class RRT : MonoBehaviour {
                     curNode = curNode.parent;
                 }
                 this.path = path;
+				return;
             }
         }
 
@@ -141,6 +151,7 @@ public class RRT : MonoBehaviour {
         this.heightPoint = heightPoint;
         this.motionModel = new KinematicModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
         calculateSpace();
+		buildRRT (0, int.MaxValue);
     }
 
 

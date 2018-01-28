@@ -12,6 +12,8 @@ public class ObjectSpawner : MonoBehaviour {
     public GameObject vehicleObject;
     float heightPoint;
     Stack<pointInfo> rrtPath;
+	List<Node> rrtList;
+
 
     void Start () {
         problem = Problem.Import(path);
@@ -24,15 +26,41 @@ public class ObjectSpawner : MonoBehaviour {
                             problem.vehicle_L, problem.vehicle_a_max, problem.vehicle_dt, problem.vehicle_omega_max, problem.vehicle_phi_max,
                             problem.vehicle_t, problem.vehicle_v_max, new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]), 
                             new Vector3(problem.vel_start[0], 0, problem.vel_start[1]), problem.obstacles, heightPoint);
-        rrtPath = rrt.findPath();
-        Debug.Log(rrtPath.Count);
+		rrtPath = rrt.getPath ();
+		rrtList = rrt.getTreeList ();
     }
+
 
     Vector3 target;
     Vector3 lastTarget;
     bool move = false;
+	bool rrtCompleted = false;
+	int listIdx = 1;
+
+
 	// Update is called once per frame
-	void Update () {
+	void Update () {	
+		if (!rrtCompleted) 
+		{
+			if (listIdx < rrtList.Count) 
+			{
+				GameObject tmp = new GameObject ();
+				LineRenderer lineRenderer = tmp.AddComponent<LineRenderer>();
+				Node node = rrtList [listIdx];
+				lineRenderer.widthMultiplier = 0.3f;
+				lineRenderer.useWorldSpace = true;
+				lineRenderer.SetPosition (0, new Vector3 (node.info.pos.x, 0, node.info.pos.z));
+				lineRenderer.SetPosition (1, new Vector3(node.parent.info.pos.x, 0, node.parent.info.pos.z));
+				Instantiate (tmp);
+				listIdx++;
+				return;
+			} 
+			else
+			{
+				rrtCompleted = true;
+			}
+		}
+
         if (rrtPath.Count != 0 || move)
         {
             if (!move)
