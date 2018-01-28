@@ -10,18 +10,20 @@ public class ObjectSpawner : MonoBehaviour {
     public float objectThickness = 0.5f;
     public GameObject goalObject;
     public GameObject vehicleObject;
+    float heightPoint;
     Stack<pointInfo> rrtPath;
 
     void Start () {
         problem = Problem.Import(path);
         spawnObjects();
         spawnActors();
+        heightPoint = vehicleObject.transform.localScale.y / 2;
         GameObject parent = this.transform.root.gameObject;
         RRT rrt = parent.GetComponent<RRT>();
-        rrt.setParameters(new Vector3(problem.pos_goal[0], 0, problem.pos_goal[1]), new Vector3(problem.pos_start[0], 0, problem.pos_start[1]), 
+        rrt.initialize(new Vector3(problem.pos_goal[0], heightPoint, problem.pos_goal[1]), new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]), 
                             problem.vehicle_L, problem.vehicle_a_max, problem.vehicle_dt, problem.vehicle_omega_max, problem.vehicle_phi_max,
                             problem.vehicle_t, problem.vehicle_v_max, new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]), 
-                            new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));
+                            new Vector3(problem.vel_start[0], 0, problem.vel_start[1]), problem.obstacles, heightPoint);
         rrtPath = rrt.findPath();
         Debug.Log(rrtPath.Count);
     }
@@ -39,8 +41,8 @@ public class ObjectSpawner : MonoBehaviour {
                 target = rrtPath.Pop().pos;
                 move = true;
             }
-            vehicleObject.transform.Translate((target- lastTarget) * Time.deltaTime, Space.World);
-            if (Vector3.Distance(target,vehicleObject.transform.position) < 0.01)
+            vehicleObject.transform.Translate((target- lastTarget) * Time.deltaTime/problem.vehicle_dt, Space.World);
+            if (Vector3.Distance(target,vehicleObject.transform.position) <= 0.5)
             {
                 move = false;
             }
@@ -51,7 +53,7 @@ public class ObjectSpawner : MonoBehaviour {
     {
         goalObject.transform.position = new Vector3(problem.pos_goal[0], 1, problem.pos_goal[1]);
         goalObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]));
-        vehicleObject.transform.position = new Vector3(problem.pos_start[0], 1, problem.pos_start[1]);
+        vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
         vehicleObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));
         Instantiate(goalObject);
         //(vehicleObject);
@@ -68,7 +70,6 @@ public class ObjectSpawner : MonoBehaviour {
             {
                 spawnObject(problem.obstacles[i], "obstacle_" + i);
             }
-            
         }
     }
 

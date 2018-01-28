@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct pointInfo
+public class pointInfo
 {
     public Vector3 pos;
     public Vector3 vel;
