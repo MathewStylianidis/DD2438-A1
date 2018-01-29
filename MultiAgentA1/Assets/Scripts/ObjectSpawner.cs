@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjectSpawner : MonoBehaviour {
     // Use this for initialization
@@ -12,9 +13,14 @@ public class ObjectSpawner : MonoBehaviour {
     public float objectThickness = 0.5f;
     public GameObject goalObject;
     public GameObject vehicleObject;
-    float heightPoint;
-    Stack<pointInfo> rrtPath;
-	List<Node> rrtList;
+	public Text timerText;
+	public Text velocityText;
+	private float time;
+	private float heightPoint;
+	private Stack<Node> rrtPath;
+	private List<Node> rrtList;
+
+
 
 
     void Start () {
@@ -30,10 +36,11 @@ public class ObjectSpawner : MonoBehaviour {
                             new Vector3(problem.vel_start[0], 0, problem.vel_start[1]), problem.obstacles, heightPoint);
 		rrtPath = rrt.getPath ();
 		rrtList = rrt.getTreeList ();
+		time = 0f;
     }
 
 
-    Vector3 target;
+    Node target;
     Vector3 lastTarget;
     bool move = false;
 	bool rrtCompleted = false;
@@ -69,14 +76,20 @@ public class ObjectSpawner : MonoBehaviour {
             if (!move)
             {
                 lastTarget = vehicleObject.transform.position;
-                target = rrtPath.Pop().pos;
+                target = rrtPath.Pop();
+				time += problem.vehicle_dt;
                 move = true;
+				//Update text
+				timerText.text = "Timer: " + time;
+				velocityText.text = "Velocity: [" + target.info.vel.x + "," + target.info.vel.z + "]";
             }
-            vehicleObject.transform.Translate((target- lastTarget) * Time.deltaTime/problem.vehicle_dt, Space.World);
-            if (Vector3.Distance(target,vehicleObject.transform.position) <= 0.5)
+			vehicleObject.transform.LookAt (target.info.pos);
+			vehicleObject.transform.Translate((target.info.pos - lastTarget) * Time.deltaTime/problem.vehicle_dt, Space.World);
+			if (Vector3.Distance(target.info.pos ,vehicleObject.transform.position) <= 0.5)
             {
                 move = false;
             }
+
         }
     }
 

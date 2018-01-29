@@ -39,7 +39,7 @@ public class RRT : MonoBehaviour {
     public BaseModel motionModel;
     private float xmin, xmax;
     private float ymin, ymax;
-    private Stack<pointInfo> path;
+    private Stack<Node> path;
 	private List<Node> G;
   
 
@@ -55,7 +55,7 @@ public class RRT : MonoBehaviour {
 	}
 
 
-	public Stack<pointInfo> getPath(){ return path;}
+	public Stack<Node> getPath(){ return path;}
 	public List<Node> getTreeList(){ return G;}
 
     private void calculateSpace()
@@ -119,12 +119,12 @@ public class RRT : MonoBehaviour {
             G.Add(qNew);
             if(Vector3.Distance(qNew.info.pos, posGoal) < vMax * dt)
             {
-                Stack<pointInfo> path = new Stack<pointInfo>();
+                Stack<Node> path = new Stack<Node>();
                 Node curNode = qNew;
   
                 while (curNode != null)
                 {
-                    path.Push(curNode.info);
+                    path.Push(curNode);
                     curNode = curNode.parent;
                 }
                 this.path = path;
