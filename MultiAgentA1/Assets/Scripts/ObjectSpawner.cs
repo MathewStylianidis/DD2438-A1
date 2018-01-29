@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ObjectSpawner : MonoBehaviour {
     // Use this for initialization
+	public Material lineMaterial;
+	public Material wallMaterial;
     public Problem problem;
     public string path;
     public float objectHeight = 4f;
@@ -19,7 +21,7 @@ public class ObjectSpawner : MonoBehaviour {
         problem = Problem.Import(path);
         spawnObjects();
         spawnActors();
-        heightPoint = vehicleObject.transform.localScale.y / 2;
+		heightPoint = vehicleObject.transform.localScale.y / 2f;
         GameObject parent = this.transform.root.gameObject;
         RRT rrt = parent.GetComponent<RRT>();
         rrt.initialize(new Vector3(problem.pos_goal[0], heightPoint, problem.pos_goal[1]), new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]), 
@@ -47,7 +49,8 @@ public class ObjectSpawner : MonoBehaviour {
 				GameObject tmp = new GameObject ();
 				LineRenderer lineRenderer = tmp.AddComponent<LineRenderer>();
 				Node node = rrtList [listIdx];
-				lineRenderer.widthMultiplier = 0.3f;
+				lineRenderer.material = lineMaterial;
+				lineRenderer.widthMultiplier = 0.1f;
 				lineRenderer.useWorldSpace = true;
 				lineRenderer.SetPosition (0, new Vector3 (node.info.pos.x, 0, node.info.pos.z));
 				lineRenderer.SetPosition (1, new Vector3(node.parent.info.pos.x, 0, node.parent.info.pos.z));
@@ -120,6 +123,7 @@ public class ObjectSpawner : MonoBehaviour {
         GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
         wall.name = name;
         wall.transform.position = middlePoint;
+		wall.GetComponent<Renderer> ().material = wallMaterial;
         wall.transform.rotation = Quaternion.LookRotation(polygonSide);
         wall.transform.localScale = new Vector3(objectThickness, objectHeight, width);
     }
