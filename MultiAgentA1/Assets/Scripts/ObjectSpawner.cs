@@ -51,18 +51,22 @@ public class ObjectSpawner : MonoBehaviour {
 	void Update () {	
 		if (!rrtCompleted) 
 		{
-			if (listIdx < rrtList.Count) 
+            int nodesToDraw = Mathf.Max(1,(int)(listIdx * Time.deltaTime));
+			if (listIdx < rrtList.Count- nodesToDraw) 
 			{
-				GameObject tmp = new GameObject ();
-				LineRenderer lineRenderer = tmp.AddComponent<LineRenderer>();
-				Node node = rrtList [listIdx];
-				lineRenderer.material = lineMaterial;
-				lineRenderer.widthMultiplier = 0.1f;
-				lineRenderer.useWorldSpace = true;
-				lineRenderer.SetPosition (0, new Vector3 (node.info.pos.x, 0, node.info.pos.z));
-				lineRenderer.SetPosition (1, new Vector3(node.parent.info.pos.x, 0, node.parent.info.pos.z));
-				Instantiate (tmp);
-				listIdx++;
+                for (int i = 0; i < nodesToDraw; i++)
+                {
+                    GameObject tmp = new GameObject();
+                    LineRenderer lineRenderer = tmp.AddComponent<LineRenderer>();
+                    Node node = rrtList[listIdx];
+                    lineRenderer.material = lineMaterial;
+                    lineRenderer.widthMultiplier = 0.1f;
+                    lineRenderer.useWorldSpace = true;
+                    lineRenderer.SetPosition(0, new Vector3(node.info.pos.x, 0, node.info.pos.z));
+                    lineRenderer.SetPosition(1, new Vector3(node.parent.info.pos.x, 0, node.parent.info.pos.z));
+                    Instantiate(tmp);
+                    listIdx++;
+                }
 				return;
 			} 
 			else
@@ -79,16 +83,14 @@ public class ObjectSpawner : MonoBehaviour {
                 target = rrtPath.Pop();
 				time += problem.vehicle_dt;
                 move = true;
-				//Update text
-				timerText.text = "Timer: " + time;
+                vehicleObject.transform.LookAt(target.info.pos);
+                //Update text
+                timerText.text = "Timer: " + time;
 				velocityText.text = "Velocity: [" + target.info.vel.x + "," + target.info.vel.z + "]";
             }
-			vehicleObject.transform.LookAt (target.info.pos);
 			vehicleObject.transform.Translate((target.info.pos - lastTarget) * Time.deltaTime/problem.vehicle_dt, Space.World);
-			if (Vector3.Distance(target.info.pos ,vehicleObject.transform.position) <= 0.5)
-            {
+			if (Vector3.Distance(target.info.pos, vehicleObject.transform.position) < problem.vehicle_dt*problem.vehicle_v_max)
                 move = false;
-            }
 
         }
     }
@@ -100,7 +102,6 @@ public class ObjectSpawner : MonoBehaviour {
         vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
         vehicleObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));
         Instantiate(goalObject);
-        //(vehicleObject);
     }
 
     void spawnObjects() {
