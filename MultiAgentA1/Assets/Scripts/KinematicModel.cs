@@ -16,7 +16,7 @@ public class KinematicModel : BaseModel
             partDist = 1f;
         }
         Vector3 newPath = path * partDist;
-        return new pointInfo(curPointInfo.pos + newPath, new Vector3((newPath.x- curPointInfo.pos.x)/dt, 1, (newPath.z - curPointInfo.pos.z) / dt));
+		return new pointInfo(curPointInfo.pos + newPath, new Vector3(vMax* dt, 1, vMax* dt));
     }
 
     public KinematicModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart) 

@@ -172,4 +172,67 @@ public class RRT : MonoBehaviour {
 
         return new Stack<pointInfo>(path);
     }
+
+
+	private bool insidePolygon(Polygon poly, Vector3 point)
+	{
+		List<float[]> vertices = poly.corners;
+		int vertexCount = vertices.Count;
+		int intersectCount = 0; //number of times our line towards infinity intersects a polygon side
+
+		if (vertexCount < 3)
+			return false; // not a polygon
+		
+		//intersectCount = getIntersectCount (vertices, point, vertexCount);
+		return intersectCount % 2 == 1;
+	}
+
+	/*private int getIntersectCount(List<float[]> vertices, Vector3 point, int vertexCount)
+	{
+		Vector3 extremePoint = new Vector3 (float.MaxValue, 0, point.z); // point needed to draw line towards infinity
+		int intersectCount = 0; //number of times our line towards infinity intersects a polygon side
+		int i = 0;
+
+		do {
+
+			int next = (i + 1) / vertexCount; //get Index of the next vertex of the polygon
+
+			//if the line to infinity intersects this side
+			if(intersectsSide(vertices[i], vertices[next], point, extremePoint)) {
+				//if this side has slope 0
+				//if(getOrientation()) 
+					//return onSegment();
+
+				vertexCount++;
+			}
+
+			i = next;		
+		} while(i != 0);
+
+	}*/
+
+
+	/*private bool intersectsSide(float[] vertex1, float[] vertex2, Vector3 point, Vector3 extremePoint)
+	{
+		int o1, o2, o3, o4;
+
+
+		//o1 = getOrientation (vertex1, vertex2, point); 
+		//o1 = getOrientation (vertex1, vertex2, extremePoint); 
+		//o1 = getOrientation (point, extremePoint, vertex1); 
+		//o1 = getOrientation (point, extremePoint, point);  
+	}*/
+
+	//change floats to vector3
+	/*private int getOrientation(float[] vertex1, float[] vertex2, float[] vertex3)
+	{
+		int orientation = (vertex2 [1] - vertex1 [1]) * (vertex3 [0] - vertex2 [0]) -
+		                  (vertex2 [0] - vertex1 [0]) * (vertex3 [1] - vertex2 [1]);
+		if (orientation == 0)
+			return 0;
+		else if (orientation > 0)
+			return 1;
+		else
+			return 2;
+	}*/
 }
