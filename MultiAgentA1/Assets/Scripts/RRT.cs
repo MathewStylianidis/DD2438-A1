@@ -116,6 +116,13 @@ public class RRT : MonoBehaviour {
 			else
 				qNear = getNearestVertex (G, posGoal);
             Node qNew = new Node(qNear, motionModel.moveTowards(qNear.info, qRand));
+
+            if (insideObstacle(qNew.info.pos))
+            {
+                k--;
+                continue;
+            }
+
             G.Add(qNew);
             if(Vector3.Distance(qNew.info.pos, posGoal) < vMax * dt)
             {
@@ -173,66 +180,101 @@ public class RRT : MonoBehaviour {
         return new Stack<pointInfo>(path);
     }
 
+    private bool insideObstacle(Vector3 point)
+    {
+        for(int i = 0; i < obstacles.Count; i++)
+        {
+            Polygon poly = obstacles[i];
+            if (poly.type == PolygonType.obstacle && insidePolygon(poly, point))
+                return true;
+            else if (poly.type == PolygonType.bounding_polygon && !insidePolygon(poly, point))
+                return true;
+        }
+        return false;
+    }
 
 	private bool insidePolygon(Polygon poly, Vector3 point)
 	{
 		List<float[]> vertices = poly.corners;
 		int vertexCount = vertices.Count;
-		int intersectCount = 0; //number of times our line towards infinity intersects a polygon side
-
-		if (vertexCount < 3)
+        float[] p = { point.x, point.z };
+        
+        
+        if (vertexCount < 3)
 			return false; // not a polygon
-		
-		//intersectCount = getIntersectCount (vertices, point, vertexCount);
-		return intersectCount % 2 == 1;
-	}
 
-	/*private int getIntersectCount(List<float[]> vertices, Vector3 point, int vertexCount)
+        return isOdd(vertices, p, vertexCount);
+
+    }
+
+	private bool isOdd(List<float[]> vertices, float[] point, int vertexCount)
 	{
-		Vector3 extremePoint = new Vector3 (float.MaxValue, 0, point.z); // point needed to draw line towards infinity
+		float[] extremePoint = { xmax * 2f, point[1] }; // point needed to draw line towards infinity
 		int intersectCount = 0; //number of times our line towards infinity intersects a polygon side
 		int i = 0;
 
-		do {
+        do {
 
-			int next = (i + 1) / vertexCount; //get Index of the next vertex of the polygon
+			int next = (i + 1) % vertexCount; //get Index of the next vertex of the polygon
 
 			//if the line to infinity intersects this side
 			if(intersectsSide(vertices[i], vertices[next], point, extremePoint)) {
 				//if this side has slope 0
-				//if(getOrientation()) 
-					//return onSegment();
+				if(getOrientation(vertices[i], point, vertices[next]) == 0) 
+					return onSegment(vertices[i], point, vertices[next]);
 
-				vertexCount++;
+				intersectCount++;
 			}
 
 			i = next;		
 		} while(i != 0);
 
-	}*/
+        return intersectCount % 2 == 1;
+	}
 
 
-	/*private bool intersectsSide(float[] vertex1, float[] vertex2, Vector3 point, Vector3 extremePoint)
+	private bool intersectsSide(float[] vertex1, float[] vertex2, float[] point, float[] extremePoint)
 	{
 		int o1, o2, o3, o4;
+ 
+		o1 = getOrientation (vertex1, vertex2, point); 
+		o2 = getOrientation (vertex1, vertex2, extremePoint); 
+		o3 = getOrientation (point, extremePoint, vertex1); 
+		o4 = getOrientation (point, extremePoint, vertex2);
 
+        if (o1 != o2 && o3 != o4)
+            return true;
 
-		//o1 = getOrientation (vertex1, vertex2, point); 
-		//o1 = getOrientation (vertex1, vertex2, extremePoint); 
-		//o1 = getOrientation (point, extremePoint, vertex1); 
-		//o1 = getOrientation (point, extremePoint, point);  
-	}*/
+        if (o1 == 0 && onSegment(vertex1, point, vertex2))
+            return true;
+        if (o2 == 0 && onSegment(vertex1, extremePoint, vertex2))
+            return true;
+        if (o3 == 0 && onSegment(point, vertex1, extremePoint))
+            return true;
+        if (o4 == 0 && onSegment(point, vertex2, extremePoint))
+            return true;
 
-	//change floats to vector3
-	/*private int getOrientation(float[] vertex1, float[] vertex2, float[] vertex3)
+        return false;
+    }
+
+    //change floats to vector3
+    private int getOrientation(float[] vertex1, float[] vertex2, float[] vertex3)
 	{
-		int orientation = (vertex2 [1] - vertex1 [1]) * (vertex3 [0] - vertex2 [0]) -
+		float orientation = (vertex2 [1] - vertex1 [1]) * (vertex3 [0] - vertex2 [0]) -
 		                  (vertex2 [0] - vertex1 [0]) * (vertex3 [1] - vertex2 [1]);
-		if (orientation == 0)
+		if (orientation == 0f)
 			return 0;
-		else if (orientation > 0)
+		else if (orientation > 0f)
 			return 1;
 		else
 			return 2;
-	}*/
+	}
+
+    private bool onSegment(float[] vertex1, float[] vertex2, float[] vertex3)
+    {
+        if (vertex2[0] <= Mathf.Max(vertex1[0], vertex3[0]) && vertex2[0] >= Mathf.Min(vertex1[0], vertex3[0])
+            && vertex2[1] <= Mathf.Max(vertex1[1], vertex3[1]) && vertex2[1] >= Mathf.Min(vertex1[1], vertex3[1]))
+            return true;
+        return false;
+    }
 }
