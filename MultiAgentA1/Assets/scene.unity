@@ -568,8 +568,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.400024, y: -49.705}
-  m_SizeDelta: {x: 169.7, y: 23.32}
+  m_AnchoredPosition: {x: 142.34, y: -49.705}
+  m_SizeDelta: {x: 259.58, y: 23.32}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1935632362
 MonoBehaviour:
@@ -723,7 +723,7 @@ MonoBehaviour:
     vel_start: []
     pos_goal: []
     pos_start: []
-  path: P3.json
+  path: P2.json
   objectHeight: 4
   objectThickness: 0.5
   goalObject: {fileID: 188746, guid: bc93e504405c8a7449afe3081ffe736a, type: 2}

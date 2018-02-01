@@ -17,7 +17,8 @@ public class ObjectSpawner : MonoBehaviour {
 	public Text velocityText;
 	private float time;
 	private float heightPoint;
-	private Stack<Node> rrtPath;
+    private float heightPointGoal;
+    private Stack<Node> rrtPath;
 	private List<Node> rrtList;
 
 
@@ -28,6 +29,7 @@ public class ObjectSpawner : MonoBehaviour {
         spawnObjects();
         spawnActors();
 		heightPoint = vehicleObject.transform.localScale.y / 2f;
+        heightPointGoal = goalObject.transform.localScale.y / 2f;
         GameObject parent = this.transform.root.gameObject;
         RRT rrt = parent.GetComponent<RRT>();
         rrt.initialize(new Vector3(problem.pos_goal[0], heightPoint, problem.pos_goal[1]), new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]), 
@@ -52,7 +54,9 @@ public class ObjectSpawner : MonoBehaviour {
 		if (!rrtCompleted) 
 		{
             int nodesToDraw = Mathf.Max(1,(int)(listIdx * Time.deltaTime));
-			if (listIdx < rrtList.Count- nodesToDraw) 
+            if (nodesToDraw + listIdx > rrtList.Count)
+                nodesToDraw = rrtList.Count - listIdx;
+			if (listIdx < rrtList.Count - nodesToDraw) 
 			{
                 for (int i = 0; i < nodesToDraw; i++)
                 {
@@ -101,7 +105,7 @@ public class ObjectSpawner : MonoBehaviour {
 
     void spawnActors()
     {
-        goalObject.transform.position = new Vector3(problem.pos_goal[0], 1, problem.pos_goal[1]);
+        goalObject.transform.position = new Vector3(problem.pos_goal[0], heightPointGoal, problem.pos_goal[1]);
         goalObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]));
         vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
         vehicleObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));

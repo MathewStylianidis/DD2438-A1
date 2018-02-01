@@ -41,7 +41,8 @@ public class RRT : MonoBehaviour {
     private float ymin, ymax;
     private Stack<Node> path;
 	private List<Node> G;
-  
+    private int nrOfnodes = 10000;
+
 
     // Use this for initialization
     void Start ()
@@ -55,8 +56,16 @@ public class RRT : MonoBehaviour {
 	}
 
 
-	public Stack<Node> getPath(){ return path;}
-	public List<Node> getTreeList(){ return G;}
+	public Stack<Node> getPath(){
+        if (path == null)
+            path = new Stack<Node>();
+        return path;
+    }
+	public List<Node> getTreeList(){
+        if (G == null)
+            G = new List<Node>();
+        return G;
+    }
 
     private void calculateSpace()
     {
@@ -89,15 +98,13 @@ public class RRT : MonoBehaviour {
         Node root = new Node(null, new pointInfo(motionModel.posStart, motionModel.velGoal, motionModel.orientation));
         G = new List<Node>();
         G.Add(root);
-        
+        int seed = 0;
         for(int k = 0; k < maxNodes; k++)
         {
-			Vector3 qRand = new Vector3(Random.Range(xmin, xmax), heightPoint, Random.Range(ymin, ymax));
-			Node qNear;
-			if (k % 10 != 0)
-				qNear = motionModel.getNearestVertex (G, qRand);
-			else
-				qNear = motionModel.getNearestVertex (G, posGoal);
+            Vector3 qRand = posGoal;
+            if (seed++ % 20 != 0)
+                qRand = new Vector3(Random.Range(xmin, xmax), heightPoint, Random.Range(ymin, ymax));
+			Node qNear = motionModel.getNearestVertex(G, qRand);
             Node qNew = new Node(qNear, motionModel.moveTowards(qNear.info, qRand));
 
             if (insideObstacle(qNew.info.pos))
@@ -141,7 +148,7 @@ public class RRT : MonoBehaviour {
         this.heightPoint = heightPoint;
         this.motionModel = new DifferentialDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
         calculateSpace();
-		buildRRT (0, int.MaxValue);
+		buildRRT (0, nrOfnodes);
     }
 
     private bool insideObstacle(Vector3 point)

@@ -5,30 +5,37 @@ using UnityEngine;
 
 public class DifferentialDriveModel : BaseModel
 {
-    public int contendersCount = 5;
+    public int contendersCount = 10;
 
     public override pointInfo moveTowards(pointInfo curPointInfo, Vector3 targetPos)
     {
-        float angle = Vector3.Angle(curPointInfo.orientation, targetPos - curPointInfo.pos);
-        Vector3 cross = Vector3.Cross(targetPos - curPointInfo.pos, curPointInfo.orientation);
-        float partTurn = omegaMax*dt/angle;
-        if(1 > partTurn)
-            partTurn = 1;
-        if (cross.y < 0)
-            angle = -angle;
-        float turnAngle = angle * partTurn*Mathf.Deg2Rad;
+        Vector3 path = targetPos - curPointInfo.pos;
+        float angle = Vector3.Angle(curPointInfo.orientation,path);
         float orientation = Vector3.Angle(Vector3.right, curPointInfo.orientation);
-        Vector3 newOrientation = new Vector3(Mathf.Cos(turnAngle + orientation), 0, Mathf.Sin(turnAngle + orientation));
-        float xMove = vMax * Mathf.Cos(turnAngle + orientation);
-        float yMove = vMax * Mathf.Sin(turnAngle + orientation);
-        Vector3 newPosition = new Vector3(curPointInfo.pos.x + xMove, 0, curPointInfo.pos.y + yMove);
+        float newAngle = orientation * Mathf.Deg2Rad;
+        if (angle > 0.00001)
+        {
+            Vector3 cross = Vector3.Cross(path, curPointInfo.orientation);
+            float partTurn = omegaMax*Mathf.Rad2Deg * dt / angle;
+            if (partTurn > 1f)
+                partTurn = 1f;
+            if (cross.y <= 0)
+                angle = -angle;
+            float turnAngle = angle * partTurn;
+            newAngle = (turnAngle + orientation) * Mathf.Deg2Rad;
+        }
+        
+        Vector3 newOrientation = new Vector3(Mathf.Cos(newAngle), 0, Mathf.Sin(newAngle));
+        float xMove = vMax * Mathf.Cos(newAngle)*dt;
+        float yMove = vMax * Mathf.Sin(newAngle)*dt;
+        Vector3 newPosition = new Vector3(curPointInfo.pos.x + xMove, curPointInfo.pos.y, curPointInfo.pos.z + yMove);
         if(Vector3.Distance(newPosition,targetPos) > Vector3.Distance(curPointInfo.pos, targetPos))
         {
-            newPosition = new Vector3(curPointInfo.pos.x, 0, curPointInfo.pos.y);
+            newPosition = curPointInfo.pos;
             xMove = 0;
             yMove = 0;
         }
-            
+        
         float xVel = (float)Math.Round((Double)xMove / dt, 2, MidpointRounding.AwayFromZero);
         float zVel = (float)Math.Round((Double)yMove / dt, 2, MidpointRounding.AwayFromZero);
         return new pointInfo(newPosition, new Vector3(xVel, 0, zVel), newOrientation);
@@ -50,7 +57,7 @@ public class DifferentialDriveModel : BaseModel
                 maxDist = contendersDist[i];
             }
         }
-
+        
         for (int i = contenders.Length; i < G.Count; i++)
         {
             float curDist = Vector3.Distance(G[i].info.pos, qRand);
@@ -58,13 +65,13 @@ public class DifferentialDriveModel : BaseModel
             {
                 contenders[replaceIndex] = G[i];
                 contendersDist[replaceIndex] = curDist;
-                float newMaxDist = 0;
+                maxDist = 0;
                 for(int j = 0; j < contenders.Length; j++)
                 {
-                    if(contendersDist[j] > newMaxDist)
+                    if(contendersDist[j] > maxDist)
                     {
                         replaceIndex = j;
-                        maxDist = newMaxDist;
+                        maxDist = contendersDist[j];
                     }
                 }
             }
@@ -75,13 +82,14 @@ public class DifferentialDriveModel : BaseModel
         for(int i = 0; i < contenders.Length; i++)
         {
             float angle = Vector3.Angle(qRand - contenders[i].info.pos, contenders[i].info.orientation);
-            if(angle < minAngle)
+            if (angle < minAngle)
             {
                 minAngle = angle;
                 bestIndex = i;
             }
+            //Debug.Log(contenders[i].info.orientation);
         }
-
+        //Debug.Log("WInner: " +contenders[bestIndex].info.orientation);
         return contenders[bestIndex];
     }
 
