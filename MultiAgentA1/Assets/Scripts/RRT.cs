@@ -84,26 +84,9 @@ public class RRT : MonoBehaviour {
         }
     }
 
-    private Node getNearestVertex(List<Node> G, Vector3 qRand)
-    {
-        Node minNode = G[0];
-        float minDistance = Vector3.Distance(minNode.info.pos, qRand);
-        float curDist;
-        for (int i = 1; i < G.Count; i++)
-        {
-            curDist = Vector3.Distance(G[i].info.pos, qRand);
-            if (curDist < minDistance)
-            {
-                minDistance = curDist;
-                minNode = G[i];
-            }
-        }
-        return minNode;
-    }
-
     private void buildRRT(int minNodes, int maxNodes)
     {
-        Node root = new Node(null, new pointInfo(posStart, velStart));
+        Node root = new Node(null, new pointInfo(motionModel.posStart, motionModel.velGoal, motionModel.orientation));
         G = new List<Node>();
         G.Add(root);
         
@@ -112,9 +95,9 @@ public class RRT : MonoBehaviour {
 			Vector3 qRand = new Vector3(Random.Range(xmin, xmax), heightPoint, Random.Range(ymin, ymax));
 			Node qNear;
 			if (k % 10 != 0)
-				qNear = getNearestVertex (G, qRand);
+				qNear = motionModel.getNearestVertex (G, qRand);
 			else
-				qNear = getNearestVertex (G, posGoal);
+				qNear = motionModel.getNearestVertex (G, posGoal);
             Node qNew = new Node(qNear, motionModel.moveTowards(qNear.info, qRand));
 
             if (insideObstacle(qNew.info.pos))
@@ -156,28 +139,9 @@ public class RRT : MonoBehaviour {
         this.velStart = velStart;
         this.obstacles = obstacles;
         this.heightPoint = heightPoint;
-        this.motionModel = new KinematicModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+        this.motionModel = new DifferentialDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
         calculateSpace();
 		buildRRT (0, int.MaxValue);
-    }
-
-
-
-
-    public Stack<pointInfo> findPath()
-    {
-        KinematicModel kinematicModel = new KinematicModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
-        Stack<pointInfo> path = new Stack<pointInfo>();
-        pointInfo curPointInfo = new pointInfo(posStart, velStart);
-        //path.Push(curPointInfo);
-
-        while (Vector3.Distance(curPointInfo.pos, posGoal) > 0.01)
-        {
-            curPointInfo = kinematicModel.moveTowards(curPointInfo, posGoal);
-            path.Push(curPointInfo);
-        }
-
-        return new Stack<pointInfo>(path);
     }
 
     private bool insideObstacle(Vector3 point)

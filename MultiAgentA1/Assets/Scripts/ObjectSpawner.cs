@@ -45,7 +45,7 @@ public class ObjectSpawner : MonoBehaviour {
     bool move = false;
 	bool rrtCompleted = false;
 	int listIdx = 1;
-
+    float currentTime = 0f;
 
 	// Update is called once per frame
 	void Update () {	
@@ -79,19 +79,23 @@ public class ObjectSpawner : MonoBehaviour {
         {
             if (!move)
             {
-                lastTarget = vehicleObject.transform.position;
                 target = rrtPath.Pop();
 				time += problem.vehicle_dt;
                 move = true;
                 vehicleObject.transform.LookAt(target.info.pos);
+                currentTime = 0f;
                 //Update text
                 timerText.text = "Timer: " + time;
 				velocityText.text = "Velocity: [" + target.info.vel.x + "," + target.info.vel.z + "]";
             }
+            currentTime += Time.deltaTime;
 			vehicleObject.transform.Translate((target.info.pos - lastTarget) * Time.deltaTime/problem.vehicle_dt, Space.World);
-			if (Vector3.Distance(target.info.pos, vehicleObject.transform.position) < problem.vehicle_dt*problem.vehicle_v_max)
+			if (currentTime >= problem.vehicle_dt)
+            {
                 move = false;
-
+                lastTarget = target.info.pos;
+                vehicleObject.transform.position = lastTarget;
+            }
         }
     }
 
@@ -101,6 +105,7 @@ public class ObjectSpawner : MonoBehaviour {
         goalObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]));
         vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
         vehicleObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));
+        lastTarget = vehicleObject.transform.position;
         Instantiate(goalObject);
     }
 

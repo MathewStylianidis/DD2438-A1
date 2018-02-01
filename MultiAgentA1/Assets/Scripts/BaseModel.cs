@@ -6,10 +6,12 @@ public class pointInfo
 {
     public Vector3 pos;
     public Vector3 vel;
-    public pointInfo(Vector3 pos, Vector3 vel)
+    public Vector3 orientation;
+    public pointInfo(Vector3 pos, Vector3 vel, Vector3 orientation)
     {
         this.pos = pos;
         this.vel = vel;
+        this.orientation = orientation;
     }
 }
 
@@ -26,6 +28,7 @@ public abstract class BaseModel {
     public float vMax;
     public Vector3 velGoal;
     public Vector3 velStart;
+    public Vector3 orientation;
 
     // Use this for initialization
     void Start () {
@@ -38,6 +41,8 @@ public abstract class BaseModel {
 	}
 
     public abstract pointInfo moveTowards(pointInfo curPointInfo, Vector3 goalPos);
+
+    public abstract Node getNearestVertex(List<Node> G, Vector3 qRand);
 
     public BaseModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart)
     {
@@ -52,5 +57,7 @@ public abstract class BaseModel {
         this.vMax = vMax;
         this.velGoal = velGoal;
         this.velStart = velStart;
+        float rad = Vector3.Angle(Vector3.right, velStart)*Mathf.Deg2Rad;
+        this.orientation = new Vector3(Mathf.Cos(rad), 0, Mathf.Sin(rad));
     }
 }
