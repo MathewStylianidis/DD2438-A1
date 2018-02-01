@@ -12,6 +12,8 @@ public class DifferentialDriveModel : BaseModel
         Vector3 path = targetPos - curPointInfo.pos;
         float angle = Vector3.Angle(curPointInfo.orientation,path);
         float orientation = Vector3.Angle(Vector3.right, curPointInfo.orientation);
+        if (curPointInfo.orientation.z < 0)
+            orientation = -orientation;
         float newAngle = orientation * Mathf.Deg2Rad;
         if (angle > 0.00001)
         {

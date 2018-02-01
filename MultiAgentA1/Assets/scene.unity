@@ -723,7 +723,7 @@ MonoBehaviour:
     vel_start: []
     pos_goal: []
     pos_start: []
-  path: P2.json
+  path: P3.json
   objectHeight: 4
   objectThickness: 0.5
   goalObject: {fileID: 188746, guid: bc93e504405c8a7449afe3081ffe736a, type: 2}
