@@ -41,7 +41,7 @@ public class RRT : MonoBehaviour {
     private float ymin, ymax;
     private Stack<Node> path;
 	private List<Node> G;
-    private int nrOfnodes = 50000;
+    public int nrOfnodes = 50000;
 
 
     // Use this for initialization
