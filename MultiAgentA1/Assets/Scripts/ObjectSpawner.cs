@@ -12,7 +12,7 @@ public class ObjectSpawner : MonoBehaviour {
     public Problem problem;
     public string path;
     public float objectHeight = 4f;
-    public float objectThickness = 0.5f;
+    public float objectThickness = 0.2f;
     public GameObject goalObject;
     public GameObject vehicleObject;
 	public Text timerText;
@@ -32,6 +32,7 @@ public class ObjectSpawner : MonoBehaviour {
     public bool removeGraphOnMove = false;
     public bool removePathOnMove = false;
 
+
     void Start () {
         problem = Problem.Import(path);
         spawnObjects();
@@ -43,7 +44,7 @@ public class ObjectSpawner : MonoBehaviour {
         rrt.initialize(new Vector3(problem.pos_goal[0], heightPoint, problem.pos_goal[1]), new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]), 
                             problem.vehicle_L, problem.vehicle_a_max, problem.vehicle_dt, problem.vehicle_omega_max, problem.vehicle_phi_max,
                             problem.vehicle_t, problem.vehicle_v_max, new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]), 
-                            new Vector3(problem.vel_start[0], 0, problem.vel_start[1]), problem.obstacles, heightPoint);
+							new Vector3(problem.vel_start[0], 0, problem.vel_start[1]), problem.obstacles, heightPoint, problem.vehicle_L);
 		rrtPath = rrt.getPath ();
         if (drawTree)
         {
@@ -205,6 +206,7 @@ public class ObjectSpawner : MonoBehaviour {
         goalObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]));
         vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
         vehicleObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));
+		vehicleObject.transform.localScale = new Vector3 (problem.vehicle_L, problem.vehicle_L, problem.vehicle_L);
         lastTarget = vehicleObject.transform.position;
         Instantiate(goalObject);
     }
@@ -234,7 +236,7 @@ public class ObjectSpawner : MonoBehaviour {
         spawnWall(new Vector3(poly.corners[0][0], objectHeight/2, poly.corners[0][1]), new Vector3(poly.corners[poly.corners.Count-1][0], objectHeight/2, poly.corners[poly.corners.Count-1][1]), name+"_Side" + (poly.corners.Count - 1), parent);
     }
 
-    void spawnWall(Vector3 origin, Vector3 destination, string name, GameObject parent)
+	void spawnWall(Vector3 origin, Vector3 destination, string name, GameObject parent)
     {
         float width = Vector3.Distance(origin, destination);
         Vector3 polygonSide = destination - origin;

@@ -1264,4 +1264,6 @@ MonoBehaviour:
   velGoal: {x: 0, y: 0, z: 0}
   velStart: {x: 0, y: 0, z: 0}
   heightPoint: 0
+  vehicleL: 0
   nrOfnodes: 50000
+  bCollision: 1
