@@ -31,7 +31,6 @@ public class ObjectSpawner : MonoBehaviour {
     public bool drawPath = true;
     public bool removeGraphOnMove = false;
     public bool removePathOnMove = false;
-    public bool drawPathOnLoad = false;
 
     void Start () {
         problem = Problem.Import(path);
@@ -62,8 +61,6 @@ public class ObjectSpawner : MonoBehaviour {
             removeGraph = true;
         if (removePathOnMove)
             removePath = true;
-        if (drawPathOnLoad)
-            render = true;
         time = 0f;
     }
 
@@ -192,10 +189,14 @@ public class ObjectSpawner : MonoBehaviour {
         }
     }
 
-    public void clickGo()
+    public void clickRender()
+    {
+        render = true;
+    }
+
+    public void clickMove()
     {
         startPathing = true;
-        render = true;
     }
 
     void spawnActors()
