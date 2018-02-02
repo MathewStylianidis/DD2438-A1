@@ -54,29 +54,32 @@ public class ObjectSpawner : MonoBehaviour {
 		if (!rrtCompleted) 
 		{
             int nodesToDraw = Mathf.Max(1,(int)(listIdx * Time.deltaTime));
-            if (nodesToDraw + listIdx > rrtList.Count)
-                nodesToDraw = rrtList.Count - listIdx;
-			if (listIdx < rrtList.Count - nodesToDraw) 
+			int rrtListSize = rrtList.Count - 1;
+
+			if (nodesToDraw + listIdx > rrtListSize)
+				nodesToDraw = rrtListSize - listIdx;
+			
+			if (listIdx <= rrtListSize - nodesToDraw) 
 			{
-                for (int i = 0; i < nodesToDraw; i++)
+				int i;
+				for (i = listIdx; i <= listIdx + nodesToDraw ; i++)
                 {
                     GameObject tmp = new GameObject();
                     LineRenderer lineRenderer = tmp.AddComponent<LineRenderer>();
-                    Node node = rrtList[listIdx];
+                    Node node = rrtList[i];
                     lineRenderer.material = lineMaterial;
                     lineRenderer.widthMultiplier = 0.1f;
                     lineRenderer.useWorldSpace = true;
                     lineRenderer.SetPosition(0, new Vector3(node.info.pos.x, 0, node.info.pos.z));
                     lineRenderer.SetPosition(1, new Vector3(node.parent.info.pos.x, 0, node.parent.info.pos.z));
                     Instantiate(tmp);
-                    listIdx++;
                 }
-				return;
+				listIdx = i - 1;
 			} 
-			else
-			{
+
+			if (listIdx == rrtListSize)
 				rrtCompleted = true;
-			}
+			return;
 		}
 
         if (rrtPath.Count != 0 || move)
