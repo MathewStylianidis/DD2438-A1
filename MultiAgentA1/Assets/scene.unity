@@ -1017,8 +1017,8 @@ MonoBehaviour:
     pos_goal: []
     pos_start: []
   path: P2.json
-  objectHeight: 4
-  objectThickness: 0.5
+  objectHeight: 1
+  objectThickness: 0.3
   goalObject: {fileID: 188746, guid: bc93e504405c8a7449afe3081ffe736a, type: 2}
   vehicleObject: {fileID: 231564438}
   timerText: {fileID: 356260342}
