@@ -389,7 +389,7 @@ GameObject:
   - component: {fileID: 373666120}
   - component: {fileID: 373666119}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Go
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,10 +409,10 @@ RectTransform:
   m_Father: {fileID: 38821004}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 30}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 30, y: 25}
+  m_SizeDelta: {x: 30, y: 25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &373666119
 MonoBehaviour:
@@ -454,7 +454,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1953283426}
-        m_MethodName: startRender
+        m_MethodName: clickGo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1028,8 +1028,9 @@ MonoBehaviour:
   obstaclesObject: {fileID: 145777522}
   drawTree: 1
   drawPath: 1
-  removeGraphOnMove: 0
+  removeGraphOnMove: 1
   removePathOnMove: 0
+  drawPathOnLoad: 1
   speedFactor: 10
 --- !u!114 &1953283427
 MonoBehaviour:

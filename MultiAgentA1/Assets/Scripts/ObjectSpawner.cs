@@ -31,6 +31,7 @@ public class ObjectSpawner : MonoBehaviour {
     public bool drawPath = true;
     public bool removeGraphOnMove = false;
     public bool removePathOnMove = false;
+    public bool drawPathOnLoad = false;
 
     void Start () {
         problem = Problem.Import(path);
@@ -61,6 +62,8 @@ public class ObjectSpawner : MonoBehaviour {
             removeGraph = true;
         if (removePathOnMove)
             removePath = true;
+        if (drawPathOnLoad)
+            render = true;
         time = 0f;
     }
 
@@ -76,6 +79,7 @@ public class ObjectSpawner : MonoBehaviour {
     bool render = false;
     bool removeGraph = false;
     bool removePath = false;
+    bool startPathing = false;
 
     // Update is called once per frame
     void Update () {
@@ -138,40 +142,43 @@ public class ObjectSpawner : MonoBehaviour {
                 return;
             }
 
-            if (removeGraph)
+            if (startPathing)
             {
-                removeChildren(graphObject);
-                removeGraph = false;
-                return;
-            }
-
-            if (removePath)
-            {
-                removeChildren(pathObject);
-                removePath = false;
-                return;
-            }
-
-            if (rrtPath.Count != 0 || move)
-            {
-                if (!move)
+                if (removeGraph)
                 {
-                    target = rrtPath.Pop();
-                    time += problem.vehicle_dt;
-                    move = true;
-                    vehicleObject.transform.LookAt(lastTarget + target.info.orientation);
-                    currentTime = 0f;
-                    //Update text
-                    timerText.text = "Timer: " + time;
-                    velocityText.text = "Velocity: [" + target.info.vel.x + "," + target.info.vel.z + "]";
+                    removeChildren(graphObject);
+                    removeGraph = false;
+                    return;
                 }
-                currentTime += Time.deltaTime;
-                vehicleObject.transform.Translate(speedFactor * (target.info.pos - lastTarget) * Time.deltaTime / problem.vehicle_dt, Space.World);
-                if (currentTime >= problem.vehicle_dt / speedFactor)
+
+                if (removePath)
                 {
-                    move = false;
-                    lastTarget = target.info.pos;
-                    vehicleObject.transform.position = lastTarget;
+                    removeChildren(pathObject);
+                    removePath = false;
+                    return;
+                }
+
+                if (rrtPath.Count != 0 || move)
+                {
+                    if (!move)
+                    {
+                        target = rrtPath.Pop();
+                        time += problem.vehicle_dt;
+                        move = true;
+                        vehicleObject.transform.LookAt(lastTarget + target.info.orientation);
+                        currentTime = 0f;
+                        //Update text
+                        timerText.text = "Timer: " + time;
+                        velocityText.text = "Velocity: [" + target.info.vel.x + "," + target.info.vel.z + "]";
+                    }
+                    currentTime += Time.deltaTime;
+                    vehicleObject.transform.Translate(speedFactor * (target.info.pos - lastTarget) * Time.deltaTime / problem.vehicle_dt, Space.World);
+                    if (currentTime >= problem.vehicle_dt / speedFactor)
+                    {
+                        move = false;
+                        lastTarget = target.info.pos;
+                        vehicleObject.transform.position = lastTarget;
+                    }
                 }
             }
         }
@@ -185,8 +192,9 @@ public class ObjectSpawner : MonoBehaviour {
         }
     }
 
-    public void startRender()
+    public void clickGo()
     {
+        startPathing = true;
         render = true;
     }
 
