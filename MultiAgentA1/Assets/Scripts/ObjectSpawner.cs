@@ -89,7 +89,7 @@ public class ObjectSpawner : MonoBehaviour {
                 target = rrtPath.Pop();
 				time += problem.vehicle_dt;
                 move = true;
-                vehicleObject.transform.LookAt(target.info.pos);
+				vehicleObject.transform.LookAt(lastTarget + target.info.orientation);
                 currentTime = 0f;
                 //Update text
                 timerText.text = "Timer: " + time;

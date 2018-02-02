@@ -146,7 +146,7 @@ public class RRT : MonoBehaviour {
         this.velStart = velStart;
         this.obstacles = obstacles;
         this.heightPoint = heightPoint;
-        this.motionModel = new DifferentialDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+		this.motionModel = new DifferentialDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
         calculateSpace();
 		buildRRT (0, nrOfnodes);
     }
