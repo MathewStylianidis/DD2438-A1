@@ -1236,7 +1236,7 @@ MonoBehaviour:
     pos_start: []
   path: P2.json
   objectHeight: 1
-  objectThickness: 0.3
+  objectThickness: 0.0001
   goalObject: {fileID: 188746, guid: bc93e504405c8a7449afe3081ffe736a, type: 2}
   vehicleObject: {fileID: 231564438}
   timerText: {fileID: 356260342}
@@ -1261,5 +1261,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nrOfnodes: 50000
-  bCollision: 0
-  modelName: 2
+  bCollision: 1
+  modelName: 0

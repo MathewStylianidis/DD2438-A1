@@ -168,8 +168,8 @@ public class ObjectSpawner : MonoBehaviour {
                         currentTime = 0f;
                         //Update text
                         timerText.text = "Timer: " + time;
-                        velocityText.text = "Velocity: [" + target.info.vel.x + "," + target.info.vel.z + "]";
-                    }
+						velocityText.text = "Velocity: [" + target.info.vel.x + "," + target.info.vel.z + "]" + " Total: " + Mathf.Sqrt(Mathf.Pow(target.info.vel.z, 2) + Mathf.Pow(target.info.vel.x, 2)) ;
+					}
                     currentTime += Time.deltaTime;
                     vehicleObject.transform.Translate(speedFactor * (target.info.pos - lastTarget) * Time.deltaTime / problem.vehicle_dt, Space.World);
                     if (currentTime >= problem.vehicle_dt / speedFactor)

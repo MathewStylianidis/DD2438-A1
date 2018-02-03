@@ -115,10 +115,28 @@ public class RRT : MonoBehaviour {
 			else 
 			{
 				// if bColission is true, the car's size is taken into account
-				if (insideObstacle(qNew.info.pos + new Vector3(0, 0, this.vehicleL/2)) 
-					|| insideObstacle(qNew.info.pos + new Vector3(0, 0, -this.vehicleL/2))
-					|| insideObstacle(qNew.info.pos+ new Vector3(this.vehicleW/2, 0, 0))  
-					|| insideObstacle(qNew.info.pos + new Vector3(-this.vehicleW/2, 0, 0)))
+
+				//Rotate the four points to be checked according to the orientation of the car
+				float orientation = Mathf.Acos (qNew.info.orientation.x);
+				Vector3 x1, x2, y1, y2; 
+				Quaternion rotation = Quaternion.Euler(0, orientation, 0);
+				x1 = rotation * new Vector3(0, 0, this.vehicleL/2);
+				x2 = rotation * new Vector3(0, 0, -this.vehicleL/2);
+				y1 = rotation * new Vector3(this.vehicleW/2, 0, 0);
+				y2 = rotation * new Vector3(-this.vehicleW/2, 0, 0);
+
+				/*Debug.Log (this.vehicleL);
+				Debug.Log (this.vehicleW);
+				Debug.Log (qNew.info.orientation);
+				Debug.Log (qNew.info.pos + x1);
+				Debug.Log (qNew.info.pos + x2);
+				Debug.Log (qNew.info.pos + y1);
+				Debug.Log (qNew.info.pos + y2);*/
+
+				if (insideObstacle(qNew.info.pos + x1) 
+					|| insideObstacle(qNew.info.pos + x2)
+					|| insideObstacle(qNew.info.pos + y1)
+					|| insideObstacle(qNew.info.pos+ y2))
 				{
 					k--;
 					continue;

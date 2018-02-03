@@ -16,7 +16,7 @@ public class KinematicModel : BaseModel
         Vector3 newPath = path * partDist;
         float xVel = (float)Math.Round((Double)newPath.x/dt, 2, MidpointRounding.AwayFromZero);
         float zVel = (float)Math.Round((Double)newPath.z/dt, 2, MidpointRounding.AwayFromZero);
-        return new pointInfo(curPointInfo.pos + newPath, new Vector3(xVel , 0, zVel), path);
+		return new pointInfo(curPointInfo.pos + newPath, new Vector3(xVel , 0, zVel), Vector3.Normalize(path));
     }
 
     public override Node getNearestVertex(List<Node> G, Vector3 qRand)
