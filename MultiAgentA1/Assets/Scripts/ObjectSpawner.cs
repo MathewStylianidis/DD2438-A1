@@ -26,6 +26,7 @@ public class ObjectSpawner : MonoBehaviour {
     private Stack<Node> rrtPath;
     private Stack<Node> rrtPathCopy;
 	private List<Node> rrtList;
+	private float carWidth;
 
     public bool drawTree = true;
     public bool drawPath = true;
@@ -44,7 +45,7 @@ public class ObjectSpawner : MonoBehaviour {
         rrt.initialize(new Vector3(problem.pos_goal[0], heightPoint, problem.pos_goal[1]), new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]), 
                             problem.vehicle_L, problem.vehicle_a_max, problem.vehicle_dt, problem.vehicle_omega_max, problem.vehicle_phi_max,
                             problem.vehicle_t, problem.vehicle_v_max, new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]), 
-							new Vector3(problem.vel_start[0], 0, problem.vel_start[1]), problem.obstacles, heightPoint, problem.vehicle_L);
+							new Vector3(problem.vel_start[0], 0, problem.vel_start[1]), problem.obstacles, heightPoint, problem.vehicle_L, carWidth);
 		rrtPath = rrt.getPath ();
         if (drawTree)
         {
@@ -205,11 +206,52 @@ public class ObjectSpawner : MonoBehaviour {
         goalObject.transform.position = new Vector3(problem.pos_goal[0], heightPointGoal, problem.pos_goal[1]);
         goalObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]));
         vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
+		scaleCar();
         vehicleObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));
-		vehicleObject.transform.localScale = new Vector3 (problem.vehicle_L, problem.vehicle_L, problem.vehicle_L);
         lastTarget = vehicleObject.transform.position;
         Instantiate(goalObject);
     }
+
+	void scaleCar()
+	{
+		GameObject jeepBody = vehicleObject.transform.Find("JEEP_BODY").gameObject;
+		MeshRenderer renderer = jeepBody.GetComponent<MeshRenderer> ();
+		Vector3[] vertices = jeepBody.GetComponent<MeshFilter> ().mesh.vertices;
+		//Vector3 jeepSize = renderer.bounds.size;
+
+		float maxX, minX, maxY, minY, maxZ, minZ;
+		maxX = maxY = maxZ = float.MinValue;
+		minX = minY = minZ = float.MaxValue;
+		for (int i = 0; i < vertices.Length; i++) 
+		{
+			if (maxX < vertices [i].x)
+				maxX = vertices [i].x;
+			else if (vertices [i].x < minX)
+				minX = vertices [i].x;
+			if (maxY < vertices [i].y)
+				maxY = vertices [i].y;
+			else if (vertices [i].y < minY)
+				minY = vertices [i].y;
+			if (maxZ < vertices [i].z)
+				maxZ = vertices [i].z;
+			else if (vertices [i].z < minZ)
+				minZ = vertices [i].z;
+		}
+
+		float carLength = Mathf.Abs (maxZ - minZ);
+		float proportion = problem.vehicle_L / carLength;
+			
+		// update vertices
+		for (int i = 0; i < vertices.Length; i++)
+			vertices [i] *= proportion;
+		// set the updated values for the mesh vertices
+		jeepBody.GetComponent<MeshFilter> ().mesh.vertices = vertices;
+
+		//float finalLength = Mathf.Abs (maxZ - minZ) * proportion;
+		//float finalHeight = Mathf.Abs (maxY- minY) * proportion;
+		carWidth = Mathf.Abs (maxX - minX) * proportion;
+	}
+
 
     void spawnObjects() {
         for(int i = 0; i < problem.obstacles.Count; i++)

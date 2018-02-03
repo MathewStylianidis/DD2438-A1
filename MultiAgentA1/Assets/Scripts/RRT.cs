@@ -37,6 +37,7 @@ public class RRT : MonoBehaviour {
     public List<Polygon> obstacles;
     public float heightPoint;
 	public float vehicleL;
+	public float vehicleW;
     public BaseModel motionModel;
     private float xmin, xmax;
     private float ymin, ymax;
@@ -122,8 +123,8 @@ public class RRT : MonoBehaviour {
 				// if bColission is true, the car's size is taken into account
 				if (insideObstacle(qNew.info.pos + new Vector3(0, 0, this.vehicleL/2)) 
 					|| insideObstacle(qNew.info.pos + new Vector3(0, 0, -this.vehicleL/2))
-					|| insideObstacle(qNew.info.pos+ new Vector3(this.vehicleL/2, 0, 0))  
-					|| insideObstacle(qNew.info.pos + new Vector3(-this.vehicleL/2, 0, 0)))
+					|| insideObstacle(qNew.info.pos+ new Vector3(this.vehicleW/2, 0, 0))  
+					|| insideObstacle(qNew.info.pos + new Vector3(-this.vehicleW/2, 0, 0)))
 				{
 					k--;
 					continue;
@@ -149,7 +150,7 @@ public class RRT : MonoBehaviour {
 
     }
 
-	public void initialize(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart, List<Polygon> obstacles, float heightPoint, float vehicleL)
+	public void initialize(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart, List<Polygon> obstacles, float heightPoint, float vehicleL, float vehicleW)
     {
         this.posGoal = posGoal;
         this.posStart = posStart;
@@ -165,6 +166,7 @@ public class RRT : MonoBehaviour {
         this.obstacles = obstacles;
         this.heightPoint = heightPoint;
 		this.vehicleL = vehicleL;
+		this.vehicleW = vehicleW;
 		this.motionModel = new DifferentialDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
         calculateSpace();
 		buildRRT (0, nrOfnodes);

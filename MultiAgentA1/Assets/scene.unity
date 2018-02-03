@@ -959,6 +959,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 100010, guid: 10d5972a5440d489f8a54e2d7498188b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300008, guid: 10d5972a5440d489f8a54e2d7498188b, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 10d5972a5440d489f8a54e2d7498188b, type: 3}
   m_IsPrefabParent: 0
@@ -1265,5 +1273,6 @@ MonoBehaviour:
   velStart: {x: 0, y: 0, z: 0}
   heightPoint: 0
   vehicleL: 0
+  vehicleW: 0
   nrOfnodes: 50000
   bCollision: 1
