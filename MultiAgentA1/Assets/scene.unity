@@ -1260,19 +1260,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31102a0a2febff14d9be9cf712676762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  posGoal: {x: 0, y: 0, z: 0}
-  posStart: {x: 0, y: 0, z: 0}
-  length: 0
-  aMax: 0
-  dt: 0
-  omegaMax: 0
-  phiMax: 0
-  t: 0
-  vMax: 0
-  velGoal: {x: 0, y: 0, z: 0}
-  velStart: {x: 0, y: 0, z: 0}
-  heightPoint: 0
-  vehicleL: 0
-  vehicleW: 0
   nrOfnodes: 50000
-  bCollision: 1
+  bCollision: 0
+  modelName: 2

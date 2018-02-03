@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Node
@@ -20,45 +21,38 @@ public class Node
 
 }
 
+public enum model
+{
+    kinematic, differentialDrive, dynamicPoint, kinematicDrive
+}
 
 public class RRT : MonoBehaviour {
 
-    public Vector3 posGoal;
-    public Vector3 posStart;
-    public float length;
-    public float aMax;
-    public float dt;
-    public float omegaMax;
-    public float phiMax;
-    public float t;
-    public float vMax;
-    public Vector3 velGoal;
-    public Vector3 velStart;
-    public List<Polygon> obstacles;
-    public float heightPoint;
-	public float vehicleL;
-	public float vehicleW;
-    public BaseModel motionModel;
+    private Vector3 posGoal;
+    private Vector3 posStart;
+    private float length;
+    private float aMax;
+    private float dt;
+    private float omegaMax;
+    private float phiMax;
+    private float t;
+    private float vMax;
+    private Vector3 velGoal;
+    private Vector3 velStart;
+    private List<Polygon> obstacles;
+    private float heightPoint;
+	private float vehicleL;
+	private float vehicleW;
+    private BaseModel motionModel;
     private float xmin, xmax;
     private float ymin, ymax;
     private Stack<Node> path;
 	private List<Node> G;
     public int nrOfnodes = 50000;
 	public bool bCollision = false;
+    public model modelName;
 
-    // Use this for initialization
-    void Start ()
-    {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-
-	public Stack<Node> getPath(){
+    public Stack<Node> getPath(){
         if (path == null)
             path = new Stack<Node>();
         return path;
@@ -167,7 +161,14 @@ public class RRT : MonoBehaviour {
         this.heightPoint = heightPoint;
 		this.vehicleL = vehicleL;
 		this.vehicleW = vehicleW;
-		this.motionModel = new KinematicModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+        if(modelName == model.differentialDrive)
+		    this.motionModel = new DifferentialDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+        else if (modelName == model.kinematicDrive)
+            this.motionModel = new KinematicDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+        else if (modelName == model.dynamicPoint)
+            this.motionModel = new DynamicPointModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+        else
+            this.motionModel = new KinematicModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
         calculateSpace();
 		buildRRT (0, nrOfnodes);
     }
