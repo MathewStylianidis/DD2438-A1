@@ -47,6 +47,7 @@ public class ObjectSpawner : MonoBehaviour {
                             problem.vehicle_t, problem.vehicle_v_max, new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]), 
 							new Vector3(problem.vel_start[0], 0, problem.vel_start[1]), problem.obstacles, heightPoint, problem.vehicle_L, carWidth);
 		rrtPath = rrt.getPath ();
+        
         if (drawTree)
         {
             rrtCompleted = false;
@@ -205,9 +206,9 @@ public class ObjectSpawner : MonoBehaviour {
     {
         goalObject.transform.position = new Vector3(problem.pos_goal[0], heightPointGoal, problem.pos_goal[1]);
         goalObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]));
-        vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
-		scaleCar();
         vehicleObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));
+        scaleCar();
+        vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
         lastTarget = vehicleObject.transform.position;
         Instantiate(goalObject);
     }

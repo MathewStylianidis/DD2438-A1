@@ -93,8 +93,41 @@ public class DifferentialDriveModel : BaseModel
         return contenders[bestIndex];
     }
 
-    public DifferentialDriveModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart)
-        : base(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart)
+    public override List<Node> completePath(Node curPointNode, pointInfo goal)
+    {
+        List<Node> nodeList = new List<Node>();
+
+        //if distance from goal is not within one timestep
+        if(Vector3.Distance(curPointNode.info.pos, goal.pos) > vMax * dt)
+            return null;
+      
+        float angle = Vector3.Angle(curPointNode.info.orientation, goal.orientation);
+        float orientation = Vector3.Angle(Vector3.right, curPointNode.info.orientation); 
+        if (curPointNode.info.orientation.z < 0)
+            orientation = -orientation;
+        float turningDts = angle / (dt * omegaMax * Mathf.Rad2Deg); 
+        int turningDtCount = (int)Mathf.Ceil(turningDts); // count of dts needed to turn to the goal's orientation
+
+        Vector3 cross = Vector3.Cross(goal.orientation, curPointNode.info.orientation);
+        if (cross.y <= 0f)
+            angle = -angle;
+
+
+        Node parent = curPointNode;
+        for (int i = 1; i < turningDtCount; i++)
+        {
+            float newAngle = (orientation + i * omegaMax * Mathf.Rad2Deg * dt * Mathf.Sign(angle)) * Mathf.Deg2Rad;
+            Vector3 newOrientation = new Vector3(Mathf.Cos(newAngle), 0, Mathf.Sin(newAngle));
+            nodeList.Add(new Node(parent, new pointInfo(parent.info.pos, new Vector3(0f, 0f, 0f), newOrientation)));
+            parent = nodeList[nodeList.Count - 1];
+        }
+
+        nodeList.Add(new Node(parent, new pointInfo(goal.pos, goal.vel, goal.orientation)));
+        return nodeList;
+    }
+
+    public DifferentialDriveModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart, RRT rrt)
+        : base(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart, rrt)
     {
     }
 }

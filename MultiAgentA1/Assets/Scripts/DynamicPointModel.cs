@@ -71,8 +71,13 @@ public class DynamicPointModel : BaseModel
         return contenders[bestIndex];
     }
 
-    public DynamicPointModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart)
-        : base(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart)
+    public override List<Node> completePath(Node curPointNode, pointInfo goal)
+    {
+        return null;
+    }
+
+    public DynamicPointModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart, RRT rrt)
+        : base(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart, rrt)
     {
     }
 }

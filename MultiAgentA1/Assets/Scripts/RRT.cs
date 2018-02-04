@@ -39,6 +39,7 @@ public class RRT : MonoBehaviour {
     private float vMax;
     private Vector3 velGoal;
     private Vector3 velStart;
+    private pointInfo goalInfo;
     private List<Polygon> obstacles;
     private float heightPoint;
 	private float vehicleL;
@@ -91,17 +92,26 @@ public class RRT : MonoBehaviour {
 
     private void buildRRT(int minNodes, int maxNodes)
     {
-        Node root = new Node(null, new pointInfo(motionModel.posStart, motionModel.velGoal, motionModel.orientation));
+        Node root = new Node(null, new pointInfo(motionModel.posStart, motionModel.velStart, motionModel.orientation));
         G = new List<Node>();
+ 
         G.Add(root);
+        if (completePath(G))
+        {
+            buildStack(G);
+            return;
+        }
+
         int seed = 0;
-        for(int k = 0; k < maxNodes; k++)
+        for(int k = 1; k < maxNodes; k++)
         {
             Vector3 qRand = posGoal;
             if (seed++ % 20 != 0)
                 qRand = new Vector3(Random.Range(xmin, xmax), heightPoint, Random.Range(ymin, ymax));
 			Node qNear = motionModel.getNearestVertex(G, qRand);
             Node qNew = new Node(qNear, motionModel.moveTowards(qNear.info, qRand));
+
+            
 
 			//Check for collisions
 			if (!bCollision) 
@@ -143,24 +153,40 @@ public class RRT : MonoBehaviour {
 				}
 			}
 
-
+       
             G.Add(qNew);
-            if(Vector3.Distance(qNew.info.pos, posGoal) < vMax * dt)
+           
+            if(completePath(G))
             {
-                Stack<Node> path = new Stack<Node>();
-                Node curNode = qNew;
-  
-                while (curNode != null)
-                {
-                    path.Push(curNode);
-                    curNode = curNode.parent;
-                }
-                this.path = path;
+                buildStack(G);
 				return;
             }
         }
 
     }
+
+    private void buildStack(List<Node> G)
+    {
+        Stack<Node> path = new Stack<Node>();
+        Node curNode = G[G.Count - 1];
+        while (curNode != null)
+        {
+            path.Push(curNode);
+            curNode = curNode.parent;
+        }
+        this.path = path;
+    }
+
+    private bool completePath(List<Node> G)
+    {
+        int lastIdx = G.Count - 1;
+        List<Node> restOfPath = this.motionModel.completePath(G[lastIdx], this.goalInfo);
+        if (restOfPath == null)
+            return false;
+        G.AddRange(restOfPath);
+        return true;
+    }
+
 
 	public void initialize(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart, List<Polygon> obstacles, float heightPoint, float vehicleL, float vehicleW)
     {
@@ -180,18 +206,23 @@ public class RRT : MonoBehaviour {
 		this.vehicleL = vehicleL;
 		this.vehicleW = vehicleW;
         if(modelName == model.differentialDrive)
-		    this.motionModel = new DifferentialDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+		    this.motionModel = new DifferentialDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart, this);
         else if (modelName == model.kinematicDrive)
-            this.motionModel = new KinematicDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+            this.motionModel = new KinematicDriveModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart, this);
         else if (modelName == model.dynamicPoint)
-            this.motionModel = new DynamicPointModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+            this.motionModel = new DynamicPointModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart, this);
         else
-            this.motionModel = new KinematicModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart);
+            this.motionModel = new KinematicModel(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart,this);
+        float rad = Vector3.Angle(Vector3.right, velGoal) * Mathf.Deg2Rad;
+        if (velGoal.z < 0f)
+            rad = -rad;
+        Vector3 goalOrientation = new Vector3(Mathf.Cos(rad), 0, Mathf.Sin(rad));
+        this.goalInfo = new pointInfo(posGoal, velGoal, goalOrientation);
         calculateSpace();
 		buildRRT (0, nrOfnodes);
     }
 
-    private bool insideObstacle(Vector3 point)
+    public bool insideObstacle(Vector3 point)
     {
         for(int i = 0; i < obstacles.Count; i++)
         {

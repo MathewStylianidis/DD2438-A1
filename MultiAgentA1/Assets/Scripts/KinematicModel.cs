@@ -36,8 +36,29 @@ public class KinematicModel : BaseModel
         return minNode;
     }
 
-    public KinematicModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart) 
-        :base(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart) 
+    public override List<Node> completePath(Node curPointNode, pointInfo goal)
+    {
+        Vector3 path = goal.pos - curPointNode.info.pos;
+        float amountOfDts = Vector3.Distance(goal.pos, curPointNode.info.pos) / (dt * vMax);
+        int dtCount = (int)Mathf.Ceil(amountOfDts);
+        Vector3 dir = path.normalized;
+        List<Node> nodeList = new List<Node>();
+        Vector3 distanceDt = dir * vMax * dt;
+        Node parent = curPointNode;
+        for (int i = 1; i < dtCount; i++)
+        {
+            Vector3 newPos = curPointNode.info.pos + distanceDt * i;
+            if (rrt.insideObstacle(newPos))
+                return null;
+            nodeList.Add(new Node(parent, new pointInfo(newPos, dir * vMax, dir)));
+            parent = nodeList[i - 1];
+        }
+        nodeList.Add(new Node(parent, new pointInfo(goal.pos, goal.vel, goal.orientation)));
+        return nodeList;
+    }
+
+    public KinematicModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart, RRT rrt) 
+        :base(posGoal, posStart, length, aMax, dt, omegaMax, phiMax, t, vMax, velGoal, velStart, rrt) 
     {     
     }
 }

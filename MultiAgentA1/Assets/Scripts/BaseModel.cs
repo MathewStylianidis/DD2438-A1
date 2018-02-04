@@ -29,6 +29,7 @@ public abstract class BaseModel {
     public Vector3 velGoal;
     public Vector3 velStart;
     public Vector3 orientation;
+    public RRT rrt;
 
     // Use this for initialization
     void Start () {
@@ -44,7 +45,9 @@ public abstract class BaseModel {
 
     public abstract Node getNearestVertex(List<Node> G, Vector3 qRand);
 
-    public BaseModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart)
+    public abstract List<Node> completePath(Node curPointNode, pointInfo goal);
+
+    public BaseModel(Vector3 posGoal, Vector3 posStart, float length, float aMax, float dt, float omegaMax, float phiMax, float t, float vMax, Vector3 velGoal, Vector3 velStart, RRT rrt)
     {
         this.posGoal = posGoal;
         this.posStart = posStart;
@@ -57,7 +60,7 @@ public abstract class BaseModel {
         this.vMax = vMax;
         this.velGoal = velGoal;
         this.velStart = velStart;
-        float rad = Vector3.Angle(Vector3.right, velStart)*Mathf.Deg2Rad;
-        this.orientation = new Vector3(Mathf.Cos(rad), 0, Mathf.Sin(rad));
+        this.orientation = velStart.normalized;
+        this.rrt = rrt;
     }
 }
