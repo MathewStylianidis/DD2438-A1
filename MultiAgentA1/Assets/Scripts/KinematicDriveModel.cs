@@ -89,10 +89,20 @@ public class KinematicDriveModel : BaseModel
     public override List<Node> completePath(Node curPointNode, pointInfo goal)
     {
         float radius = length / Mathf.Tan(phiMax);
-        List<Node> rl = RL(curPointNode, goal, radius);
-        //List<Node> ll = LL(curPointNode, goal, radius);
-     
-        return rl;
+        List<List< Node >> pathLists = new List<List<Node>>();
+        pathLists.Add(RL(curPointNode, goal, radius));
+        pathLists.Add(LR(curPointNode, goal, radius));
+        pathLists.Add(RR(curPointNode, goal, radius));
+        pathLists.Add(LL(curPointNode, goal, radius));
+        int minIdx = 0;
+        int minSize = int.MaxValue;
+        for (int i = 0; i < pathLists.Count; i++)
+            if (pathLists[i] != null && pathLists[i].Count < minSize)
+            {
+                minIdx = i;
+                minSize = pathLists[i].Count;
+            }
+        return pathLists[minIdx];
     }
 
     private List<Node> dubinPath(Node curPointNode, pointInfo goal, float radius, Vector3 tp1, Vector3 tp2, Vector3 p1, Vector3 p2, bool rightStart, bool rightGoal)
