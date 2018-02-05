@@ -378,6 +378,10 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 100008, guid: 10d5972a5440d489f8a54e2d7498188b, type: 3}
   m_PrefabInternal: {fileID: 1801450963}
+--- !u!4 &231564440 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 400008, guid: 10d5972a5440d489f8a54e2d7498188b, type: 3}
+  m_PrefabInternal: {fileID: 1801450963}
 --- !u!1 &356260340
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,10 +412,10 @@ RectTransform:
   m_Father: {fileID: 38821004}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 97.400024, y: -23.24}
-  m_SizeDelta: {x: 169.7, y: 29.61}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -23.24}
+  m_SizeDelta: {x: 169.70001, y: 29.61}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &356260342
 MonoBehaviour:
@@ -772,7 +776,7 @@ Light:
   serializedVersion: 8
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -805,7 +809,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 937717140}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 48, y: 53.8, z: -46.83}
+  m_LocalPosition: {x: 45.04, y: 60.4, z: -39.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -889,7 +893,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 36
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -914,7 +918,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1764209091}
   m_LocalRotation: {x: 0.48129708, y: -0, z: -0, w: 0.8765576}
-  m_LocalPosition: {x: 11.7, y: 36.13, z: -3.98}
+  m_LocalPosition: {x: 11.7, y: 56.46, z: -16.91}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1076,9 +1080,9 @@ RectTransform:
   m_Father: {fileID: 38821004}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 246.9191, y: -49.705}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 142.2, y: -49.705}
   m_SizeDelta: {x: 468.8, y: 23.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1935632362
@@ -1236,7 +1240,7 @@ MonoBehaviour:
     pos_start: []
   path: P2.json
   objectHeight: 1
-  objectThickness: 0.0001
+  objectThickness: 0.1
   goalObject: {fileID: 188746, guid: bc93e504405c8a7449afe3081ffe736a, type: 2}
   vehicleObject: {fileID: 231564438}
   timerText: {fileID: 356260342}
@@ -1262,4 +1266,69 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nrOfnodes: 50000
   bCollision: 0
-  modelName: 2
+  modelName: 3
+--- !u!1 &2033938968
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2033938969}
+  - component: {fileID: 2033938970}
+  m_Layer: 0
+  m_Name: Spotlight
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2033938969
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2033938968}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 6.92, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 231564440}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!108 &2033938970
+Light:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2033938968}
+  m_Enabled: 1
+  serializedVersion: 8
+  m_Type: 0
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 20
+  m_Range: 10
+  m_SpotAngle: 47
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 0
+    m_Resolution: -1
+    m_CustomResolution: -1
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
+    m_NearPlane: 0.2
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_AreaSize: {x: 1, y: 1}
+  m_BounceIntensity: 1
+  m_ColorTemperature: 6570
+  m_UseColorTemperature: 0
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
