@@ -206,6 +206,16 @@ public class ObjectSpawner : MonoBehaviour {
     {
         goalObject.transform.position = new Vector3(problem.pos_goal[0], heightPointGoal, problem.pos_goal[1]);
         goalObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_goal[0], 0, problem.vel_goal[1]));
+		GameObject lightGameObject = new GameObject("The Light");
+		Light lightComp = lightGameObject.AddComponent<Light>();
+		lightComp.type = 0;
+		lightComp.intensity = 22f;
+		lightComp.range = 10f;
+		lightComp.spotAngle = 47f;
+		lightGameObject.transform.position = new Vector3(problem.pos_goal[0], heightPointGoal, problem.pos_goal[1]) + Vector3.up * 6f;
+		lightGameObject.transform.LookAt (goalObject.transform.position);
+
+
         vehicleObject.transform.rotation = Quaternion.LookRotation(new Vector3(problem.vel_start[0], 0, problem.vel_start[1]));
         scaleCar();
         vehicleObject.transform.position = new Vector3(problem.pos_start[0], heightPoint, problem.pos_start[1]);
@@ -285,7 +295,6 @@ public class ObjectSpawner : MonoBehaviour {
         Vector3 polygonSide = destination - origin;
         Vector3 middlePoint = origin + polygonSide * 0.5f;
         GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        wall.transform.SetParent(parent.transform);
         wall.name = name;
         wall.transform.position = middlePoint;
 		wall.GetComponent<Renderer> ().material = wallMaterial;
