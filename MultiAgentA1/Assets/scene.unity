@@ -1234,7 +1234,7 @@ MonoBehaviour:
     vel_start: []
     pos_goal: []
     pos_start: []
-  path: P1.json
+  path: P2.json
   objectHeight: 1
   objectThickness: 0.0001
   goalObject: {fileID: 188746, guid: bc93e504405c8a7449afe3081ffe736a, type: 2}
@@ -1262,4 +1262,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nrOfnodes: 50000
   bCollision: 0
-  modelName: 3
+  modelName: 2

@@ -15,7 +15,7 @@ public class pointInfo
     }
 }
 
-public abstract class BaseModel {
+public abstract class BaseModel{
 
     public Vector3 posGoal;
     public Vector3 posStart;
